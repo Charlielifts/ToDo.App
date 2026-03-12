@@ -13,7 +13,6 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
-// GET all todos
 app.get("/todos", async (req, res) => {
   try {
     const result = await pool.query(
@@ -26,7 +25,6 @@ app.get("/todos", async (req, res) => {
   }
 });
 
-// POST new todo
 app.post("/todos", async (req, res) => {
   try {
     const { text } = req.body;
@@ -43,7 +41,7 @@ app.post("/todos", async (req, res) => {
   }
 });
 
-// UPDATE todo by number_of_list
+
 app.put("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -56,12 +54,12 @@ app.put("/todos/:id", async (req, res) => {
 
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error("Error updating todo:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// DELETE todo by number_of_list
+
 app.delete("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -75,7 +73,7 @@ app.delete("/todos/:id", async (req, res) => {
   }
 });
 
-// Root route
+
 app.get("/", (req, res) => {
   res.send("Todo API running");
 });
