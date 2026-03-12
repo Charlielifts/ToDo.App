@@ -15,32 +15,43 @@ const pool = new Pool({
 })
 
 app.get("/todos", async (req, res) => {
-  const result = await pool.query('SELECT * FROM todos ORDER BY "number of list" DESC')
+  const result = await pool.query(
+    "SELECT * FROM todos ORDER BY number_of_list DESC"
+  )
   res.json(result.rows)
 })
 
 app.post("/todos", async (req, res) => {
   const { text } = req.body
+
   const result = await pool.query(
-    'INSERT INTO todos ("todo_list", completed) VALUES ($1, $2) RETURNING *',
+    "INSERT INTO todos (todo_list, completed) VALUES ($1,$2) RETURNING *",
     [text, false]
   )
+
   res.json(result.rows[0])
 })
 
 app.put("/todos/:id", async (req, res) => {
   const { id } = req.params
   const { completed } = req.body
+
   const result = await pool.query(
-    'UPDATE todos SET completed=$1 WHERE "number of list"=$2 RETURNING *',
+    "UPDATE todos SET completed=$1 WHERE number_of_list=$2 RETURNING *",
     [completed, id]
   )
+
   res.json(result.rows[0])
 })
 
 app.delete("/todos/:id", async (req, res) => {
   const { id } = req.params
-  await pool.query('DELETE FROM todos WHERE "number_of_list"=$1', [id])
+
+  await pool.query(
+    "DELETE FROM todos WHERE number_of_list=$1",
+    [id]
+  )
+
   res.json({ message: "deleted" })
 })
 
