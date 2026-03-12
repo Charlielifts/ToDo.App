@@ -10,11 +10,7 @@ app.use(express.json())
 
 
 const pool = new Pool({
-  user: "postgres",
-  host: "db.poayekfrcfzsxinqskdr.supabase.co",
-  database: "postgres",
-  password: "Y68RNHAK6O3i7Udc",
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 })
 
@@ -26,7 +22,7 @@ app.get("/todos", async (req, res) => {
 app.post("/todos", async (req, res) => {
   const { text } = req.body
   const result = await pool.query(
-    'INSERT INTO todos ("todo list", completed) VALUES ($1, $2) RETURNING *',
+    'INSERT INTO todos ("todo_list", completed) VALUES ($1, $2) RETURNING *',
     [text, false]
   )
   res.json(result.rows[0])
@@ -35,18 +31,16 @@ app.post("/todos", async (req, res) => {
 app.put("/todos/:id", async (req, res) => {
   const { id } = req.params
   const { completed } = req.body
-
-  await pool.query(
+  const result = await pool.query(
     'UPDATE todos SET completed=$1 WHERE "number of list"=$2 RETURNING *',
     [completed, id]
   )
-
-  res.json({ message: "updated" })
+  res.json(result.rows[0])
 })
 
 app.delete("/todos/:id", async (req, res) => {
   const { id } = req.params
-  await pool.query('DELETE FROM todos WHERE "number of list"=$1', [id])
+  await pool.query('DELETE FROM todos WHERE "number_of_list"=$1', [id])
   res.json({ message: "deleted" })
 })
 
