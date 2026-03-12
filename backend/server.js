@@ -11,10 +11,11 @@ app.use(express.json())
 
 const pool = new Pool({
   user: "postgres",
-  host: "localhost",
-  database: "todo_db",
-  password: "Admin",
+  host: "db.poayekfrcfzsxinqskdr.supabase.co",
+  database: "postgres",
+  password: "Y68RNHAK6O3i7Udc",
   port: 5432,
+  ssl: { rejectUnauthorized: false }
 })
 
 app.get("/todos", async (req, res) => {
